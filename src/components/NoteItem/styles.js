@@ -6,7 +6,7 @@ export const Container = styled.div`
 
   background-color: ${({ theme, $isNew }) => $isNew ? "transparent" : theme.COLORS.BACKGROUND_600};
 
-  border: ${({ theme, $isNew }) => $isNew ? `1px dashed ${theme.COLORS.GRAY_300}` : "none"};
+  border: ${({ theme, $isNew }) => $isNew ? `2px dashed ${theme.COLORS.GRAY_300}` : "none"};
   
   margin-bottom: 8px;
   border-radius: 10px;
@@ -27,7 +27,6 @@ export const Container = styled.div`
 
   > input {
     height: 56px;
-    width: 100%;
 
     padding: 12px;
 
