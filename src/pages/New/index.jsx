@@ -91,7 +91,7 @@ export function New() {
         <Form>
           <header>
             <IoMdArrowBack onClick={handleBack} />
-            <ButtonText title="voltar" onClick={handleBack} />
+            <button className="buttonHeader" onClick={handleBack}>Voltar</button>
           </header>
 
           <h1>Novo filme</h1>

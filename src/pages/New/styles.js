@@ -35,6 +35,12 @@ export const Form = styled.form`
 
     color: ${({ theme }) => theme.COLORS.PINK};
 
+    .buttonHeader {
+      color: ${({ theme }) => theme.COLORS.PINK};
+      background: none;
+      border: none;
+    }
+
     a {
       font-size: 20px;
       color: ${({ theme }) => theme.COLORS.PINK};
