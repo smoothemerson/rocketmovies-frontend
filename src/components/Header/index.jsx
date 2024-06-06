@@ -1,19 +1,16 @@
 import { useNavigate } from "react-router-dom";
 
-import avatarPlaceholder from "../../assets/avatar_placeholder.svg";
-
-import { Input } from "../../components/Input";
-
-import { useAuth } from "../../hooks/auth";
-
 import { FiSearch } from "react-icons/fi";
-
+import avatarPlaceholder from "../../assets/avatar_placeholder.svg";
+import { Input } from "../../components/Input";
 import { Container, Profile, Brand, Search, Logout } from "./style";
 
+import { useAuth } from "../../hooks/auth";
 import { api } from "../../services/api";
 
-export function Header() {
+export function Header({ search, setSearch }) {
   const { signOut, user } = useAuth();
+
   const navigation = useNavigate();
 
   const avatarURL = user.avatar
@@ -36,7 +33,12 @@ export function Header() {
       </Brand>
 
       <Search>
-        <Input placeholder="Pesquisar pelo título" icon={FiSearch} />
+        <Input
+          placeholder="Pesquisar pelo título"
+          icon={FiSearch}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </Search>
 
       <Profile>
