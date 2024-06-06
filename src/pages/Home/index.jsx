@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiPlus, FiSearch } from "react-icons/fi";
 
-import { Container, Content, Brand, Search, NewNote, Head } from "./styles";
+import { Container, Content } from "./styles";
 
 import { Header } from "../../components/Header";
 import { Section } from "../../components/Section";
 import { Note } from "../../components/Note";
-import { Input } from "../../components/Input";
 
 import { api } from "../../services/api";
 
@@ -23,9 +21,7 @@ export function Home() {
 
   useEffect(() => {
     async function fetchNotes() {
-      const response = await api.get(
-        `/movie_notes?title=${search}`
-      );
+      const response = await api.get(`/movie_notes?title=${search}`);
       setMovieNotes(response.data);
     }
 
@@ -34,21 +30,7 @@ export function Home() {
 
   return (
     <Container>
-      <Head>
-        <Brand>
-          <h1>RocketMovies</h1>
-        </Brand>
-
-        <Search>
-          <Input
-            placeholder="Pesquisar pelo título"
-            icon={FiSearch}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </Search>
-
-        <Header />
-      </Head>
+      <Header search={search} setSearch={setSearch} />
 
       <Content>
         <Section title="Meus filmes">
@@ -60,10 +42,7 @@ export function Home() {
             />
           ))}
         </Section>
-        <NewNote to="/new">
-          <FiPlus />
-          <p>Adicionar filme</p>
-        </NewNote>
+        
       </Content>
     </Container>
   );
