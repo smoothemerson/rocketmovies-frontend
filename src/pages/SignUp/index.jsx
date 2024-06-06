@@ -7,6 +7,8 @@ import { api } from "../../services/api";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
 
+import { FiArrowLeft } from "react-icons/fi";
+
 import { Container, Form, Background } from "./styles";
 
 export function SignUp() {
@@ -38,8 +40,6 @@ export function SignUp() {
 
   return (
     <Container>
-      <Background />
-
       <Form>
         <h1>RocketMovies</h1>
         <p>Aplicação para acompanhar tudo que assistir.</p>
@@ -69,8 +69,13 @@ export function SignUp() {
 
         <Button title="Cadastrar" onClick={handleSignUp} />
 
-        <Link to="/">Voltar para o login</Link>
+        <footer>
+          <FiArrowLeft />
+          <Link to="/">Voltar para o login</Link>
+        </footer>
       </Form>
+
+      <Background />
     </Container>
   );
 }

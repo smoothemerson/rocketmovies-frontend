@@ -6,6 +6,22 @@ export const Container = styled.div`
   
   display: flex;
   align-items: stretch;
+
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    font-size: 14px;
+
+    margin-top: 42px;
+
+    svg, 
+    a {
+      color: ${({ theme }) => theme.COLORS.PINK};
+    }
+  }
 `
 
 export const Form = styled.form`
@@ -31,11 +47,6 @@ export const Form = styled.form`
   > p {
     font-size: 14px;
     color: ${({ theme }) => theme.COLORS.GRAY_100};
-  }
-
-  > a {
-    margin-top: 42px;
-    color: ${({ theme }) => theme.COLORS.PINK};
   }
 `
 
