@@ -47,7 +47,13 @@ export function New() {
 
     if (!rating) {
       return alert(
-        "Você deixou uma nota no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio."
+        "Digite uma nota para o filme."
+      );
+    }
+
+    if(newTag.length < 1 && tags.length < 1){
+      return alert(
+        "Digite uma tag."
       );
     }
 
@@ -107,7 +113,7 @@ export function New() {
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          <Section title="Marcadores">
+          <Section title="Marcadores" showNewNote={false}>
             <div className="tags">
               {tags.map((tag, index) => (
                 <NoteItem
