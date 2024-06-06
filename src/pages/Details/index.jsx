@@ -7,7 +7,6 @@ import { api } from "../../services/api";
 import { useAuth } from "../../hooks/auth";
 
 import { Tags } from "../../components/Tags";
-import { ButtonText } from "../../components/ButtonText";
 import { Header } from "../../components/Header";
 
 import { FaClock } from "react-icons/fa";
@@ -72,7 +71,7 @@ export function Details() {
           <Content>
             <header>
               <FiArrowLeft />
-              <ButtonText title="Voltar" onClick={handleBack} />
+              <button className="buttonHeader" onClick={handleBack}>Voltar</button>
             </header>
 
             <div className="title">
