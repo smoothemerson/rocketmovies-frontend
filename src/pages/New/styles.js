@@ -48,6 +48,16 @@ export const Form = styled.form`
     }
   }
 
+  .tags {
+    padding: 16px;
+    background-color: ${({ theme }) => theme.COLORS.BACKGROUND_950};
+    border-radius: 8px;
+
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+  }
+
   #movies {
     margin: 40px 0;
 

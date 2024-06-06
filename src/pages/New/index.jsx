@@ -53,13 +53,13 @@ export function New() {
 
     if(newTag.length < 1 && tags.length < 1){
       return alert(
-        "Digite uma tag."
+        "Digite um marcador."
       );
     }
 
     if (newTag) {
       return alert(
-        "Você deixou uma tag no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio."
+        "Você deixou um marcador no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio."
       );
     }
 
@@ -124,7 +124,7 @@ export function New() {
               ))}
               <NoteItem
                 $isNew
-                placeholder="Nova tag"
+                placeholder="Novo marcador"
                 onChange={(e) => setNewTag(e.target.value)}
                 value={newTag}
                 onClick={handleAddTag}
