@@ -58,6 +58,7 @@ export function Profile() {
         <button type="button" onClick={handleBack}>
           <FiArrowLeft />
         </button>
+        <button onClick={handleBack}>Voltar</button>
       </header>
 
       <Form>
