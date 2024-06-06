@@ -10,8 +10,8 @@ export const Container = styled.button`
   border-radius: 10px;
   font-weight: 500;
 
-  background-color: ${({ theme }) => theme.COLORS.PINK};
-  color: ${({ theme }) => theme.COLORS.BACKGROUND_950};
+  background-color: ${({ theme, $exclude }) => $exclude ? theme.COLORS.BACKGROUND_950 : theme.COLORS.PINK};
+  color: ${({ theme, $exclude }) => $exclude ? theme.COLORS.PINK : theme.COLORS.BACKGROUND_950};
 
   &:disabled {
     opacity: 0.5;
