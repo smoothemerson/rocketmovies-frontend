@@ -1,19 +1,16 @@
-import { Container } from './styles'
-
-import { Tag } from '../Tag'
+import { Container } from './styles';
+import { Tag } from '../Tag';
 
 export function Tags({ data, ...rest }) {
-  return(
+  return (
     <Container {...rest}>
-      {
-        data.tags &&
+      {data && (
         <main>
-          {
-            data.tags.map( tag=> <Tag key={tag.id} title={tag.name}/>)
-          }
-
+          {data.map(tag => (
+            <Tag key={tag.id} title={tag.name} />
+          ))}
         </main>
-      }
+      )}
     </Container>
-  )
+  );
 }
