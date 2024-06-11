@@ -7,7 +7,7 @@ export const Container = styled.div`
     width: 100%;
     height: 144px;
 
-    background: ${({ theme }) => theme.COLORS.BACKGROUND_950};
+    background: ${({ theme }) => theme.COLORS.BACKGROUND_600};
 
     display: flex;
     align-items: center;
