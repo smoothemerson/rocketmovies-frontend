@@ -13,6 +13,7 @@ import { FaClock } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 import StarImg from "../../assets/star.svg";
 import StarImgDisable from "../../assets/stardisable.svg";
+import avatar_placeholder from "../../assets/avatar_placeholder.svg";
 
 export function Details() {
   const { user } = useAuth();
@@ -24,7 +25,7 @@ export function Details() {
 
   const avatarURL = user.avatar
     ? `${api.defaults.baseURL}/files/${user.avatar}`
-    : avatarPlaceholder;
+    : avatar_placeholder;
 
   const renderStars = (rating) => {
     const stars = [];
