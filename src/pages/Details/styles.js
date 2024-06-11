@@ -25,10 +25,11 @@ export const Container = styled.div`
 
       color: ${({ theme }) => theme.COLORS.PINK};
 
-      a {
+      button {
         font-size: 16px;
         color: ${({ theme }) => theme.COLORS.PINK};
-        gap: 10px;
+        background: none;
+        border: none;
       }
     }
     

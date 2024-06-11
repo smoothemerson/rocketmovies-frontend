@@ -71,7 +71,7 @@ export function Details() {
           <Content>
             <header>
               <FiArrowLeft />
-              <button className="buttonHeader" onClick={handleBack}>Voltar</button>
+              <button onClick={handleBack}>Voltar</button>
             </header>
 
             <div className="title">
