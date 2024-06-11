@@ -51,6 +51,12 @@ export function New() {
       );
     }
 
+    if (rating < 1 || rating > 5){
+      return alert(
+        "A nota não pode ser menor que 1 ou maior que 5."
+      )
+    }
+
     if(newTag.length < 1 && tags.length < 1){
       return alert(
         "Digite um marcador."
