@@ -51,9 +51,9 @@ export function New() {
       );
     }
 
-    if (rating < 1 || rating > 5){
+    if (rating < 0 || rating > 5){
       return alert(
-        "A nota não pode ser menor que 1 ou maior que 5."
+        "A nota não pode ser menor que 0 ou maior que 5."
       )
     }
 
