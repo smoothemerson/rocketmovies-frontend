@@ -14,9 +14,6 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-
-  text-align: center;
 
   > h1 {
     font-size: 48px;
@@ -36,6 +33,7 @@ export const Form = styled.form`
   > a {
     margin-top: 42px;
     color: ${({ theme }) => theme.COLORS.PINK};
+    text-align: center;
   }
 `
 
