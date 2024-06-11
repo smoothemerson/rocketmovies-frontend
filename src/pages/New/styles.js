@@ -13,34 +13,30 @@ export const Container = styled.div`
   > main {
     grid-area: content;
     overflow-y: auto;
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      margin-bottom: 36px;
+
+      color: ${({ theme }) => theme.COLORS.PINK};
+
+      button {
+        color: ${({ theme }) => theme.COLORS.PINK};
+      }
+      
+      svg {
+        cursor: pointer;
+      }
+    }
   }
 `
 
 export const Form = styled.form`
   max-width: 1100px;
   margin: 38px auto;
-
-  > header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    margin-bottom: 36px;
-
-    color: ${({ theme }) => theme.COLORS.PINK};
-
-    .buttonHeader {
-      color: ${({ theme }) => theme.COLORS.PINK};
-      background: none;
-      border: none;
-    }
-
-    a {
-      font-size: 20px;
-      color: ${({ theme }) => theme.COLORS.PINK};
-      gap: 10px;
-    }
-  }
 
   #movies {
     margin: 40px 0;
