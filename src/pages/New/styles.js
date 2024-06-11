@@ -14,12 +14,6 @@ export const Container = styled.div`
     grid-area: content;
     overflow-y: auto;
   }
-
-  .tags {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
 `
 
 export const Form = styled.form`
@@ -48,6 +42,14 @@ export const Form = styled.form`
     }
   }
 
+  #movies {
+    margin: 40px 0;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 56px;
+  }
+
   .tags {
     padding: 16px;
     background-color: ${({ theme }) => theme.COLORS.BACKGROUND_950};
@@ -56,14 +58,6 @@ export const Form = styled.form`
     display: flex;
     justify-content: flex-start;
     gap: 24px;
-  }
-
-  #movies {
-    margin: 40px 0;
-
-    display: flex;
-    justify-content: space-between;
-    gap: 56px;
   }
 
   .buttons {

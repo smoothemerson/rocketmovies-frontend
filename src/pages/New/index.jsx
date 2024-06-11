@@ -6,7 +6,6 @@ import { Textarea } from "../../components/Textarea";
 import { NoteItem } from "../../components/NoteItem";
 import { Section } from "../../components/Section";
 import { Button } from "../../components/Button";
-import { ButtonText } from "../../components/ButtonText";
 import { Header } from "../../components/Header";
 import { Input } from "../../components/Input";
 
@@ -28,7 +27,7 @@ export function New() {
   const navigate = useNavigate();
 
   function handleBack() {
-    navigate(-1);
+    navigate("/");
   }
 
   function handleAddTag() {
@@ -134,7 +133,7 @@ export function New() {
 
           <div className="buttons">
             <Button exclude title="Excluir filme" onClick={handleRemove} />
-            <Button title="Salvar" onClick={handleNewNote} />
+            <Button title="Salvar alterações" onClick={handleNewNote} />
           </div>
         </Form>
       </main>
