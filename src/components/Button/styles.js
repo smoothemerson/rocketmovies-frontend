@@ -13,7 +13,11 @@ export const Container = styled.button`
   background-color: ${({ theme, $exclude }) => $exclude ? theme.COLORS.BACKGROUND_950 : theme.COLORS.PINK};
   color: ${({ theme, $exclude }) => $exclude ? theme.COLORS.PINK : theme.COLORS.BACKGROUND_950};
 
-  &:disabled {
+  &.inactive {
     opacity: 0.5;
+  }
+
+  &.active {
+    opacity: 1;
   }
 `

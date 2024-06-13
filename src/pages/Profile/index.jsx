@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiArrowLeft, FiUser, FiMail, FiLock, FiCamera } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
@@ -25,6 +25,8 @@ export function Profile() {
   const [avatar, setAvatar] = useState(avatarURL);
   const [avatarFile, setAvatarFile] = useState(null);
 
+  const [isChanged, setIsChanged] = useState(false);
+
   const navigate = useNavigate();
 
   function handleBack() {
@@ -42,6 +44,7 @@ export function Profile() {
     const userUpdated = Object.assign(user, updated);
 
     await updateProfile({ user: userUpdated, avatarFile });
+    setIsChanged(false);
   }
 
   function handleChangeAvatar(event) {
@@ -50,7 +53,19 @@ export function Profile() {
 
     const imagePreview = URL.createObjectURL(file);
     setAvatar(imagePreview);
+    setIsChanged(true);
   }
+
+  useEffect(() => {
+    const hasChanged =
+      name !== user.name ||
+      email !== user.email ||
+      passwordOld ||
+      passwordNew ||
+      avatar !== avatarURL;
+
+    setIsChanged(hasChanged);
+  }, [name, email, passwordOld, passwordNew, avatar, user.name, user.email, avatarURL]);
 
   return (
     <Container>
@@ -102,7 +117,7 @@ export function Profile() {
           onChange={(e) => setPasswordNew(e.target.value)}
         />
 
-        <Button title="Salvar" onClick={handleUpdate} />
+        <Button title="Salvar" onClick={handleUpdate} className={isChanged ? "active" : "inactive"} />
       </Form>
     </Container>
   );
