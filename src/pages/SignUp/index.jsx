@@ -38,9 +38,15 @@ export function SignUp() {
       });
   }
 
+  function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      handleSignUp();
+    }
+  }
+
   return (
     <Container>
-      <Form>
+      <Form onKeyPress={handleKeyPress}>
         <h1>RocketMovies</h1>
         <p>Aplicação para acompanhar tudo que assistir.</p>
 
