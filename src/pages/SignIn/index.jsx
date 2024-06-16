@@ -19,9 +19,23 @@ export function SignIn() {
     signIn({ email, password });
   }
 
+  function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      if (!email) {
+        alert("Preencha o campo e-mail");
+        return;
+      }
+      if (!password) {
+        alert("Preencha o campo senha");
+        return;
+      }
+      handleSignIn();
+    }
+  }
+
   return (
     <Container>
-      <Form>
+      <Form onKeyPress={handleKeyPress}>
         <h1>RocketMovies</h1>
         <p>Aplicação para acompanhar tudo que assistir.</p>
 
