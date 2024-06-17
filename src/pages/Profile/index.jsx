@@ -23,6 +23,7 @@ export function Profile() {
     ? `${api.defaults.baseURL}/files/${user.avatar}`
     : avatarPlaceholder;
   const [avatar, setAvatar] = useState(avatarURL);
+  const [originalAvatar, setOriginalAvatar] = useState(avatarURL);
   const [avatarFile, setAvatarFile] = useState(null);
 
   const [isChanged, setIsChanged] = useState(false);
@@ -34,8 +35,6 @@ export function Profile() {
   }
 
   async function handleUpdate() {
-    if (!isChanged) return;
-
     const updated = {
       name,
       email,
@@ -44,8 +43,13 @@ export function Profile() {
     };
 
     const userUpdated = Object.assign(user, updated);
-
     await updateProfile({ user: userUpdated, avatarFile });
+
+    if (avatarFile) {
+      const newAvatarURL = URL.createObjectURL(avatarFile);
+      setAvatar(newAvatarURL);
+      setOriginalAvatar(newAvatarURL);
+    }
 
     setIsChanged(false);
   }
@@ -59,12 +63,20 @@ export function Profile() {
     setIsChanged(true);
   }
 
-  function handleKeyDown(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleUpdate();
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleUpdate();
+      }
     }
-  }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [name, email, passwordOld, passwordNew, avatarFile]);
 
   useEffect(() => {
     const hasChanged =
@@ -72,7 +84,7 @@ export function Profile() {
       email !== user.email ||
       passwordOld ||
       passwordNew ||
-      avatar !== avatarURL;
+      avatar !== originalAvatar;
 
     setIsChanged(hasChanged);
   }, [
@@ -81,9 +93,9 @@ export function Profile() {
     passwordOld,
     passwordNew,
     avatar,
+    originalAvatar,
     user.name,
     user.email,
-    avatarURL,
   ]);
 
   return (
@@ -95,7 +107,7 @@ export function Profile() {
         <button onClick={handleBack}>Voltar</button>
       </header>
 
-      <Form onKeyDown={handleKeyDown}>
+      <Form>
         <Avatar>
           <img src={avatar} alt="Foto do usuário" />
 
