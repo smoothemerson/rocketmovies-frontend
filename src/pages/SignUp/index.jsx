@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMail, FiLock, FiUser } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -38,15 +38,23 @@ export function SignUp() {
       });
   }
 
-  function handleKeyPress(event) {
-    if (event.key === "Enter") {
-      handleSignUp();
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Enter") {
+        handleSignUp();
+      }
     }
-  }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [name, email, password]);
 
   return (
     <Container>
-      <Form onKeyPress={handleKeyPress}>
+      <Form>
         <h1>RocketMovies</h1>
         <p>Aplicação para acompanhar tudo que assistir.</p>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMail, FiLock } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
@@ -43,7 +43,7 @@ export function SignIn() {
 
   return (
     <Container>
-      <Form onKeyDown={handleKeyDown}>
+      <Form>
         <h1>RocketMovies</h1>
         <p>Aplicação para acompanhar tudo que assistir.</p>
 

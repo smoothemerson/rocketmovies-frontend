@@ -35,6 +35,8 @@ export function Profile() {
   }
 
   async function handleUpdate() {
+    if (!isChanged) return;
+
     const updated = {
       name,
       email,
@@ -43,12 +45,16 @@ export function Profile() {
     };
 
     const userUpdated = Object.assign(user, updated);
-    await updateProfile({ user: userUpdated, avatarFile });
 
     if (avatarFile) {
+      await updateProfile({ user: userUpdated, avatarFile });
+
       const newAvatarURL = URL.createObjectURL(avatarFile);
       setAvatar(newAvatarURL);
       setOriginalAvatar(newAvatarURL);
+      setAvatarFile(null);
+    } else {
+      await updateProfile({ user: userUpdated });
     }
 
     setIsChanged(false);
@@ -62,21 +68,6 @@ export function Profile() {
     setAvatar(imagePreview);
     setIsChanged(true);
   }
-
-  useEffect(() => {
-    function handleKeyDown(event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        handleUpdate();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [name, email, passwordOld, passwordNew, avatarFile]);
 
   useEffect(() => {
     const hasChanged =
@@ -97,6 +88,21 @@ export function Profile() {
     user.name,
     user.email,
   ]);
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Enter" && isChanged) {
+        event.preventDefault();
+        handleUpdate();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [name, email, passwordOld, passwordNew, avatarFile]);
 
   return (
     <Container>
