@@ -19,23 +19,31 @@ export function SignIn() {
     signIn({ email, password });
   }
 
-  function handleKeyPress(event) {
-    if (event.key === "Enter") {
-      if (!email) {
-        alert("Preencha o campo e-mail");
-        return;
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Enter") {
+        if (!email) {
+          alert("Preencha o campo e-mail");
+          return;
+        }
+        if (!password) {
+          alert("Preencha o campo senha");
+          return;
+        }
+        handleSignIn();
       }
-      if (!password) {
-        alert("Preencha o campo senha");
-        return;
-      }
-      handleSignIn();
     }
-  }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [email, password]);
 
   return (
     <Container>
-      <Form onKeyPress={handleKeyPress}>
+      <Form onKeyDown={handleKeyDown}>
         <h1>RocketMovies</h1>
         <p>Aplicação para acompanhar tudo que assistir.</p>
 

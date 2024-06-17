@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ export function New() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const [rating, setRating] = useState([]);
+  const [rating, setRating] = useState(0);
 
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
@@ -46,21 +46,15 @@ export function New() {
     }
 
     if (!rating) {
-      return alert(
-        "Digite uma nota para o filme."
-      );
+      return alert("Digite uma nota para o filme.");
     }
 
-    if (rating < 0 || rating > 5){
-      return alert(
-        "A nota não pode ser menor que 0 ou maior que 5."
-      )
+    if (Number(rating) < 0 || Number(rating) > 5) {
+      return alert("A nota não pode ser menor que 0 ou maior que 5.");
     }
 
-    if(newTag.length < 1 && tags.length < 1){
-      return alert(
-        "Digite um marcador."
-      );
+    if (newTag.length < 1 && tags.length < 1) {
+      return alert("Digite um marcador.");
     }
 
     if (newTag) {
@@ -88,6 +82,21 @@ export function New() {
       navigate(-1);
     }
   }
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleNewNote();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [title, description, rating, tags, newTag]);
 
   return (
     <Container>
