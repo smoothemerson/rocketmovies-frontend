@@ -15,6 +15,7 @@ export const Container = styled.button`
 
   &.inactive {
     opacity: 0.5;
+    cursor: not-allowed;
   }
 
   &.active {
