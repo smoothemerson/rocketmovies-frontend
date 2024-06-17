@@ -34,6 +34,8 @@ export function Profile() {
   }
 
   async function handleUpdate() {
+    if (!isChanged) return;
+
     const updated = {
       name,
       email,
@@ -44,6 +46,7 @@ export function Profile() {
     const userUpdated = Object.assign(user, updated);
 
     await updateProfile({ user: userUpdated, avatarFile });
+
     setIsChanged(false);
   }
 
@@ -56,6 +59,13 @@ export function Profile() {
     setIsChanged(true);
   }
 
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleUpdate();
+    }
+  }
+
   useEffect(() => {
     const hasChanged =
       name !== user.name ||
@@ -65,7 +75,16 @@ export function Profile() {
       avatar !== avatarURL;
 
     setIsChanged(hasChanged);
-  }, [name, email, passwordOld, passwordNew, avatar, user.name, user.email, avatarURL]);
+  }, [
+    name,
+    email,
+    passwordOld,
+    passwordNew,
+    avatar,
+    user.name,
+    user.email,
+    avatarURL,
+  ]);
 
   return (
     <Container>
@@ -76,7 +95,7 @@ export function Profile() {
         <button onClick={handleBack}>Voltar</button>
       </header>
 
-      <Form>
+      <Form onKeyDown={handleKeyDown}>
         <Avatar>
           <img src={avatar} alt="Foto do usuário" />
 
@@ -117,7 +136,11 @@ export function Profile() {
           onChange={(e) => setPasswordNew(e.target.value)}
         />
 
-        <Button title="Salvar" onClick={handleUpdate} className={isChanged ? "active" : "inactive"} />
+        <Button
+          title="Salvar"
+          onClick={handleUpdate}
+          className={isChanged ? "active" : "inactive"}
+        />
       </Form>
     </Container>
   );
