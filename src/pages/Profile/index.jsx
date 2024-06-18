@@ -16,8 +16,8 @@ export function Profile() {
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
-  const [passwordOld, setPasswordOld] = useState();
-  const [passwordNew, setPasswordNew] = useState();
+  const [passwordOld, setPasswordOld] = useState("");
+  const [passwordNew, setPasswordNew] = useState("");
 
   const avatarURL = user.avatar
     ? `${api.defaults.baseURL}/files/${user.avatar}`
@@ -57,6 +57,8 @@ export function Profile() {
       await updateProfile({ user: userUpdated });
     }
 
+    setPasswordOld("");
+    setPasswordNew("");
     setIsChanged(false);
   }
 
@@ -144,6 +146,7 @@ export function Profile() {
           placeholder="Senha atual"
           type="password"
           icon={FiLock}
+          value={passwordOld}
           onChange={(e) => setPasswordOld(e.target.value)}
         />
 
@@ -151,6 +154,7 @@ export function Profile() {
           placeholder="Nova senha"
           type="password"
           icon={FiLock}
+          value={passwordNew}
           onChange={(e) => setPasswordNew(e.target.value)}
         />
 
