@@ -74,15 +74,6 @@ export function New() {
     navigate(-1);
   }
 
-  async function handleRemove() {
-    const confirm = window.confirm("Deseja realmente remover a nota?");
-
-    if (confirm) {
-      await api.delete(`/movie_notes/${params.id}`);
-      navigate(-1);
-    }
-  }
-
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === "Enter") {
@@ -148,7 +139,7 @@ export function New() {
           </Section>
 
           <div className="buttons">
-            <Button exclude title="Excluir filme" onClick={handleRemove} />
+            <Button exclude title="Cancelar" onClick={handleBack} />
             <Button title="Salvar alterações" onClick={handleNewNote} />
           </div>
         </Form>
