@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 
 import { Textarea } from "../../components/Textarea";
@@ -9,10 +8,8 @@ import { Button } from "../../components/Button";
 import { ButtonText } from "../../components/ButtonText";
 import { Header } from "../../components/Header";
 import { Input } from "../../components/Input";
-
-import { Container, Form } from "./styles";
-
 import { IoMdArrowBack } from "react-icons/io";
+import { Container, Form } from "./styles";
 
 import { api } from "../../services/api";
 
