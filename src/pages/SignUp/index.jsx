@@ -9,39 +9,110 @@ import { Button } from "../../components/Button";
 
 import { FiArrowLeft } from "react-icons/fi";
 
-import { Container, Form, Background } from "./styles";
+import {
+  Container,
+  Form,
+  Background,
+  PasswordCriteria,
+  StatusCard,
+} from "./styles";
 
 export function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    length: false,
+    upperCase: false,
+    lowerCase: false,
+    number: false,
+    specialChar: false,
+  });
+
+  const showPasswordCriteria = !Object.values(passwordCriteria).every(Boolean);
+
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isStatusVisible, setIsStatusVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  function handleSignUp() {
+  function validatePassword(password) {
+    const lengthCriteria = /.{8,}/;
+    const upperCaseCriteria = /[A-Z]/;
+    const lowerCaseCriteria = /[a-z]/;
+    const numberCriteria = /[0-9]/;
+    const specialCharCriteria = /[!@#$%^&*(),.?":{}|<>]/;
+
+    return {
+      length: lengthCriteria.test(password),
+      upperCase: upperCaseCriteria.test(password),
+      lowerCase: lowerCaseCriteria.test(password),
+      number: numberCriteria.test(password),
+      specialChar: specialCharCriteria.test(password),
+    };
+  }
+
+  function handlePasswordChange(event) {
+    const newPassword = event.target.value;
+    setPassword(newPassword);
+    setPasswordCriteria(validatePassword(newPassword));
+  }
+
+  async function handleSignUp() {
     if (!name || !email || !password) {
       return alert("Preencha todos os campos!");
     }
 
-    api
-      .post("/users", { name, email, password })
-      .then(() => {
-        alert("Usuário cadastrado com sucesso!");
-        navigate("/");
-      })
-      .catch((error) => {
-        if (error.response) {
-          alert(error.response.data.message);
-        } else {
-          alert("Não foi possível cadastrar");
-        }
-      });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      setStatusMessage("O e-mail fornecido não é válido.");
+      setIsStatusVisible(true);
+      return;
+    }
+
+    if (showPasswordCriteria) {
+      setStatusMessage("A senha deve atender a todos os critérios.");
+      setIsStatusVisible(true);
+      return;
+    }
+
+    setIsLoading(true);
+    setIsStatusVisible(true);
+    setStatusMessage("Cadastrando usuário...");
+
+    try {
+      await api.post("/users", { name, email, password });
+      setStatusMessage("Usuário cadastrado com sucesso!");
+    } catch (error) {
+      if (error.response) {
+        setStatusMessage(error.response.data.message);
+      } else {
+        setStatusMessage("Não foi possível cadastrar");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function handleCloseStatus() {
+    setIsStatusVisible(false);
+    if (statusMessage === "Usuário cadastrado com sucesso!") {
+      navigate("/");
+    }
   }
 
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === "Enter") {
-        handleSignUp();
+        event.preventDefault();
+        if (isStatusVisible && !isLoading) {
+          handleCloseStatus();
+        } else if (!isStatusVisible) {
+          handleSignUp();
+        }
       }
     }
 
@@ -50,7 +121,7 @@ export function SignUp() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [name, email, password]);
+  }, [isStatusVisible, isLoading, name, email, password]);
 
   return (
     <Container>
@@ -78,8 +149,39 @@ export function SignUp() {
           placeholder="Senha"
           type="password"
           icon={FiLock}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
         />
+
+        {showPasswordCriteria && (
+          <PasswordCriteria>
+            <p>Critérios da senha:</p>
+            <ul>
+              <li style={{ color: passwordCriteria.length ? "green" : "red" }}>
+                Pelo menos 8 caracteres
+              </li>
+              <li
+                style={{ color: passwordCriteria.upperCase ? "green" : "red" }}
+              >
+                Pelo menos uma letra maiúscula
+              </li>
+              <li
+                style={{ color: passwordCriteria.lowerCase ? "green" : "red" }}
+              >
+                Pelo menos uma letra minúscula
+              </li>
+              <li style={{ color: passwordCriteria.number ? "green" : "red" }}>
+                Pelo menos um número
+              </li>
+              <li
+                style={{
+                  color: passwordCriteria.specialChar ? "green" : "red",
+                }}
+              >
+                Pelo menos um caractere especial
+              </li>
+            </ul>
+          </PasswordCriteria>
+        )}
 
         <Button title="Cadastrar" onClick={handleSignUp} />
 
@@ -88,6 +190,13 @@ export function SignUp() {
           <Link to="/">Voltar para o login</Link>
         </footer>
       </Form>
+
+      {isStatusVisible && (
+        <StatusCard>
+          <p>{statusMessage}</p>
+          {!isLoading && <Button title="OK" onClick={handleCloseStatus} />}
+        </StatusCard>
+      )}
 
       <Background />
     </Container>
