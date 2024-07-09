@@ -7,15 +7,24 @@ import { useAuth } from "../../hooks/auth";
 import avatarPlaceholder from "../../assets/avatar_placeholder.svg";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
-import { Container, Form, Avatar } from "./styles";
+import { Container, Form, Avatar, StatusCard } from "./styles";
 
 import { api } from "../../services/api";
 
 export function Profile() {
-  const { user, updateProfile } = useAuth();
+  const {
+    user,
+    updateProfile,
+    statusMessage,
+    isStatusVisible,
+    isLoading,
+    setStatusMessage,
+    setIsStatusVisible,
+  } = useAuth();
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
+  const [originalEmail, setOriginalEmail] = useState(user.email);
   const [passwordOld, setPasswordOld] = useState("");
   const [passwordNew, setPasswordNew] = useState("");
 
@@ -46,20 +55,31 @@ export function Profile() {
 
     const userUpdated = Object.assign(user, updated);
 
-    if (avatarFile) {
-      await updateProfile({ user: userUpdated, avatarFile });
+    try {
+      if (avatarFile) {
+        await updateProfile({ user: userUpdated, avatarFile });
 
-      const newAvatarURL = URL.createObjectURL(avatarFile);
-      setAvatar(newAvatarURL);
-      setOriginalAvatar(newAvatarURL);
-      setAvatarFile(null);
-    } else {
-      await updateProfile({ user: userUpdated });
+        const newAvatarURL = URL.createObjectURL(avatarFile);
+        setAvatar(newAvatarURL);
+        setOriginalAvatar(newAvatarURL);
+        setAvatarFile(null);
+      } else {
+        await updateProfile({ user: userUpdated });
+      }
+
+      setOriginalEmail(email);
+      setPasswordOld("");
+      setPasswordNew("");
+      setIsChanged(false);
+    } catch (error) {
+      setEmail(originalEmail);
+      setIsChanged(false);
     }
+  }
 
-    setPasswordOld("");
-    setPasswordNew("");
-    setIsChanged(false);
+  function handleCloseStatus() {
+    setIsStatusVisible(false);
+    setStatusMessage("");
   }
 
   function handleChangeAvatar(event) {
@@ -68,13 +88,12 @@ export function Profile() {
 
     const imagePreview = URL.createObjectURL(file);
     setAvatar(imagePreview);
-    setIsChanged(true);
   }
 
   useEffect(() => {
     const hasChanged =
       name !== user.name ||
-      email !== user.email ||
+      email !== originalEmail ||
       passwordOld ||
       passwordNew ||
       avatar !== originalAvatar;
@@ -88,14 +107,18 @@ export function Profile() {
     avatar,
     originalAvatar,
     user.name,
-    user.email,
+    originalEmail,
   ]);
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if (event.key === "Enter" && isChanged) {
+      if (event.key === "Enter") {
         event.preventDefault();
-        handleUpdate();
+        if (isStatusVisible && !isLoading) {
+          handleCloseStatus();
+        } else if (!isStatusVisible && isChanged) {
+          handleUpdate();
+        }
       }
     }
 
@@ -104,7 +127,7 @@ export function Profile() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [name, email, passwordOld, passwordNew, avatarFile]);
+  }, [isStatusVisible, isLoading, isChanged]);
 
   return (
     <Container>
@@ -164,6 +187,13 @@ export function Profile() {
           className={isChanged ? "active" : "inactive"}
         />
       </Form>
+
+      {isStatusVisible && (
+        <StatusCard>
+          <p>{statusMessage}</p>
+          {!isLoading && <Button title="OK" onClick={handleCloseStatus} />}
+        </StatusCard>
+      )}
     </Container>
   );
 }
