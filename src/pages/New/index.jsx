@@ -54,8 +54,20 @@ export function New() {
       return;
     }
 
-    if (Number(rating) < 0 || Number(rating) > 5) {
-      setStatusMessage("A nota não pode ser menor que 0 ou maior que 5.");
+    const validateRating = /^\d*$/.test(rating);
+    if (validateRating) {
+      if (Number(rating) < 0 || Number(rating) > 5) {
+        setStatusMessage("A nota não pode ser menor que 0 ou maior que 5.");
+        setIsStatusVisible(true);
+        return;
+      }
+      else {
+        setIsStatusVisible(false)
+      }
+    }
+
+    if(!validateRating) {
+      setStatusMessage("Nota inválida.");
       setIsStatusVisible(true);
       return;
     }
@@ -83,7 +95,7 @@ export function New() {
         title,
         description,
         tags,
-        rating,
+        rating: Number(rating),
       });
 
       setStatusMessage("Filme cadastrado com sucesso!");
@@ -183,6 +195,7 @@ export function New() {
       {isStatusVisible && (
         <StatusCard>
           <p>{statusMessage}</p>
+          {!isLoading && <Button title="OK" onClick={handleCloseStatus} />}
         </StatusCard>
       )}
     </Container>
