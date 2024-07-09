@@ -62,7 +62,9 @@ export function SignUp() {
 
   async function handleSignUp() {
     if (!name || !email || !password) {
-      return alert("Preencha todos os campos!");
+      setStatusMessage("Preencha todos os campos!");
+      setIsStatusVisible(true);
+      return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
