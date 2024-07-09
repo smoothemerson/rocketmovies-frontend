@@ -9,7 +9,7 @@ import { ButtonText } from "../../components/ButtonText";
 import { Header } from "../../components/Header";
 import { Input } from "../../components/Input";
 import { IoMdArrowBack } from "react-icons/io";
-import { Container, Form } from "./styles";
+import { Container, Form, StatusCard } from "./styles";
 
 import { api } from "../../services/api";
 
@@ -22,10 +22,14 @@ export function New() {
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
 
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isStatusVisible, setIsStatusVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   function handleBack() {
-    navigate("/");
+    navigate(-1);
   }
 
   function handleAddTag() {
@@ -37,45 +41,79 @@ export function New() {
     setTags((prevState) => prevState.filter((tag) => tag !== deleted));
   }
 
-  async function handleNewNote() {
+  async function handleNewMovie() {
     if (!title) {
-      return alert("Digite o título do filme");
+      setStatusMessage("Digite o título do filme");
+      setIsStatusVisible(true);
+      return;
     }
 
     if (!rating) {
-      return alert("Digite uma nota para o filme.");
+      setStatusMessage("Digite uma nota para o filme.");
+      setIsStatusVisible(true);
+      return;
     }
 
     if (Number(rating) < 0 || Number(rating) > 5) {
-      return alert("A nota não pode ser menor que 0 ou maior que 5.");
+      setStatusMessage("A nota não pode ser menor que 0 ou maior que 5.");
+      setIsStatusVisible(true);
+      return;
     }
 
     if (newTag.length < 1 && tags.length < 1) {
-      return alert("Digite um marcador.");
+      setStatusMessage("Digite uma tag para o filme");
+      setIsStatusVisible(true);
+      return;
     }
 
     if (newTag) {
-      return alert(
-        "Você deixou um marcador no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio."
+      setStatusMessage(
+        "Você deixou uma tag no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio."
       );
+      setIsStatusVisible(true);
+      return;
     }
 
-    await api.post("/movie_notes", {
-      title,
-      description,
-      tags,
-      rating,
-    });
+    setIsLoading(true);
+    setIsStatusVisible(true);
+    setStatusMessage("Criando filme...");
 
-    alert("Nota de filme criado com sucesso!");
-    navigate(-1);
+    try {
+      await api.post("/movie_notes", {
+        title,
+        description,
+        tags,
+        rating,
+      });
+
+      setStatusMessage("Filme cadastrado com sucesso!");
+      setIsStatusVisible(false);
+      handleBack();
+    } catch (error) {
+      if (error.response) {
+        setStatusMessage(error.response.data.message);
+      } else {
+        setStatusMessage("Não foi possível cadastrar");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function handleCloseStatus() {
+    setIsStatusVisible(false);
+    setStatusMessage("");
   }
 
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === "Enter") {
         event.preventDefault();
-        handleNewNote();
+        if (isStatusVisible && !isLoading) {
+          handleCloseStatus();
+        } else if (!isStatusVisible) {
+          handleNewMovie();
+        }
       }
     }
 
@@ -84,7 +122,7 @@ export function New() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [title, description, rating, tags, newTag]);
+  }, [isStatusVisible, isLoading, title, description, rating, tags, newTag]);
 
   return (
     <Container>
@@ -137,10 +175,16 @@ export function New() {
 
           <div className="buttons">
             <Button exclude title="Cancelar" onClick={handleBack} />
-            <Button title="Salvar alterações" onClick={handleNewNote} />
+            <Button title="Salvar alterações" onClick={handleNewMovie} />
           </div>
         </Form>
       </main>
+
+      {isStatusVisible && (
+        <StatusCard>
+          <p>{statusMessage}</p>
+        </StatusCard>
+      )}
     </Container>
   );
 }
