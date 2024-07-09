@@ -54,26 +54,25 @@ export function New() {
       return;
     }
 
+    if (newTag.length < 1 && tags.length < 1) {
+      setStatusMessage("Digite uma tag para o filme");
+      setIsStatusVisible(true);
+      return;
+    }
+
     const validateRating = /^\d*$/.test(rating);
     if (validateRating) {
       if (Number(rating) < 0 || Number(rating) > 5) {
         setStatusMessage("A nota não pode ser menor que 0 ou maior que 5.");
         setIsStatusVisible(true);
         return;
-      }
-      else {
-        setIsStatusVisible(false)
+      } else {
+        setIsStatusVisible(false);
       }
     }
 
-    if(!validateRating) {
+    if (!validateRating) {
       setStatusMessage("Nota inválida.");
-      setIsStatusVisible(true);
-      return;
-    }
-
-    if (newTag.length < 1 && tags.length < 1) {
-      setStatusMessage("Digite uma tag para o filme");
       setIsStatusVisible(true);
       return;
     }
