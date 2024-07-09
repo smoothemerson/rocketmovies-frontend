@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Container, Content } from "./styles";
+import { Container, Content, StatusCard } from "./styles";
 
 import { Header } from "../../components/Header";
 import { Section } from "../../components/Section";
@@ -15,14 +15,30 @@ export function Home() {
 
   const navigate = useNavigate();
 
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isStatusVisible, setIsStatusVisible] = useState(false);
+
   function handleDetails(id) {
     navigate(`/details/${id}`);
   }
 
   useEffect(() => {
     async function fetchNotes() {
-      const response = await api.get(`/movie_notes?title=${search}`);
-      setMovieNotes(response.data);
+      setIsStatusVisible(true);
+      setStatusMessage("Carregando filmes...");
+
+      try {
+        const response = await api.get(`/movie_notes?title=${search}`);
+        setMovieNotes(response.data);
+      } catch (error) {
+        if (error.response) {
+          setStatusMessage(error.response.data.message);
+        } else {
+          setStatusMessage("Não foi possível visualizar as notas");
+        }
+      } finally {
+        setIsStatusVisible(false);
+      }
     }
 
     fetchNotes();
@@ -42,8 +58,13 @@ export function Home() {
             />
           ))}
         </Section>
-        
       </Content>
+
+      {isStatusVisible && (
+        <StatusCard>
+          <p>{statusMessage}</p>
+        </StatusCard>
+      )}
     </Container>
   );
 }
