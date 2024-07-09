@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Container, Content } from "./styles";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { api } from "../../services/api";
@@ -8,17 +7,22 @@ import { useAuth } from "../../hooks/auth";
 
 import { Tags } from "../../components/Tags";
 import { Header } from "../../components/Header";
+import { Button } from "../../components/Button";
 
 import { FaClock } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 import StarImg from "../../assets/star.svg";
 import StarImgDisable from "../../assets/stardisable.svg";
 import avatar_placeholder from "../../assets/avatar_placeholder.svg";
+import { Container, Content, StatusCard } from "./styles";
 
 export function Details() {
   const { user } = useAuth();
 
   const [data, setData] = useState(null);
+
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isStatusVisible, setIsStatusVisible] = useState(false);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -46,18 +50,47 @@ export function Details() {
   }
 
   async function handleRemove() {
-    const confirm = window.confirm("Deseja realmente remover a nota?");
+    setStatusMessage("Deseja realmente remover o filme?");
+    setIsStatusVisible(true);
+  }
 
-    if (confirm) {
+  async function deleteNote() {
+    try {
       await api.delete(`/movie_notes/${params.id}`);
-      navigate(-1);
+      handleBack();
+    } catch (error) {
+      if (error.response) {
+        setStatusMessage(error.response.data.message);
+      } else {
+        setStatusMessage("Não foi possível remover o filme");
+      }
+    } finally {
+      setIsStatusVisible(false);
     }
+  }
+
+  function handleCloseStatus() {
+    setIsStatusVisible(false);
+    setStatusMessage("");
   }
 
   useEffect(() => {
     async function fetchNote() {
-      const response = await api.get(`/movie_notes/${params.id}`);
-      setData(response.data);
+      setIsStatusVisible(true);
+      setStatusMessage("Carregando filme...");
+
+      try {
+        const response = await api.get(`/movie_notes/${params.id}`);
+        setData(response.data);
+      } catch (error) {
+        if (error.response) {
+          setStatusMessage(error.response.data.message);
+        } else {
+          setStatusMessage("Não foi possível visualizar o filme");
+        }
+      } finally {
+        setIsStatusVisible(false);
+      }
     }
 
     fetchNote();
@@ -78,7 +111,9 @@ export function Details() {
             <div className="title">
               <h1>{data.title}</h1>
               <div>{renderStars(data.rating)}</div>
-              <button className="button" onClick={handleRemove}>Excluir filme</button>
+              <button className="button" onClick={handleRemove}>
+                Excluir filme
+              </button>
             </div>
 
             <div className="author">
@@ -96,6 +131,19 @@ export function Details() {
             <p id="p">{data.description}</p>
           </Content>
         </main>
+      )}
+
+      {isStatusVisible && (
+        <StatusCard>
+          <p>{statusMessage}</p>
+
+          {statusMessage === "Deseja realmente remover o filme?" && (
+            <>
+              <Button title="Sim" onClick={deleteNote} />
+              <Button title="Não" onClick={handleCloseStatus} />
+            </>
+          )}
+        </StatusCard>
       )}
     </Container>
   );
